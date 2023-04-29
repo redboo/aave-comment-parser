@@ -1,7 +1,7 @@
+import codecs
 import logging
 import os
 
-import chardet
 import pandas as pd
 from pandas import DataFrame
 
@@ -16,13 +16,13 @@ def encode_csv(csv_file_path: str, encoding: str = "utf-8") -> tuple[str, DataFr
     :return: кортеж из пути к обработанному файлу и DataFrame с его содержимым.
     """
     logging.info(f"Определяем кодировку файла '{csv_file_path}'...")
-    with open(csv_file_path, "rb") as f:
-        detected_encoding = chardet.detect(f.read())["encoding"]
+    with codecs.open(csv_file_path, "r", "utf-8") as f:
+        detected_encoding = f.encoding
 
-    if not detected_encoding or detected_encoding.lower() == encoding:
+    if not detected_encoding or detected_encoding.lower().startswith(encoding):
         df = pd.read_csv(csv_file_path, encoding=encoding)
     else:
-        logging.info(f"Преобразуем файл '{csv_file_path}' в файл с кодировкой '{encoding}'...")
+        logging.info(f"Преобразуем файл '{detected_encoding}' в файл с кодировкой '{encoding}'...")
         df = pd.read_csv(csv_file_path, encoding=detected_encoding)
         obj_cols = df.select_dtypes(include=["object"]).columns
         df[obj_cols] = df[obj_cols].apply(lambda x: x.str.encode(encoding, "ignore").str.decode(encoding))
