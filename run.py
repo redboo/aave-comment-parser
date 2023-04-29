@@ -72,7 +72,7 @@ def run(log_level, interval=None, csv=False, excel=False, limit=None, encoding="
     excel_file = None
 
     while True:
-        csv_file = create_csv_file()
+        csv_file = create_csv_file(filename_prefix="aave-comments")
         start_time = time.monotonic()
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Парсинг запущен...")
         num_comments = parse_topics_and_comments(csv_file, limit=limit)

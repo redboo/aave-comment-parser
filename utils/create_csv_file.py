@@ -6,7 +6,7 @@ DOWNLOADS_DIR = "downloads"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf-8"):
+def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf-8", filename_prefix="data"):
     """
     Функция создает новый CSV-файл с заданными параметрами.
 
@@ -14,6 +14,8 @@ def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf
      - filename: str (default=None) - название файла. Если None, то имя файла генерируется автоматически.
      - header_row: bool (default=True) - нужно ли записывать заголовок в файл.
      - delimiter: str (default=',') - разделитель, который будет использоваться в CSV-файле.
+     - encoding: str (default='utf-8') - кодировка файла.
+     - filename_prefix: str (default='data') - префикс для названия файла.
 
     Возвращает путь к созданному файлу.
 
@@ -21,7 +23,7 @@ def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf
     - OSError: при ошибке создания директории или файла.
     """
     if filename is None:
-        filename = f"aave-comments_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+        filename = f"{filename_prefix}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
 
     os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
