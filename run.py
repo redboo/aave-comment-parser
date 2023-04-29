@@ -1,3 +1,5 @@
+"""Модуль для парсинга комментариев с сайта."""
+
 import logging
 import time
 from datetime import datetime
@@ -8,7 +10,12 @@ from parsing import parse_topics_and_comments
 from utils import convert_csv_to_excel, create_csv_file, plural
 
 
-def setup_logging(level):
+def setup_logging(level) -> None:
+    """Настройка логирования.
+
+    Args:
+        level (str): Уровень логирования.
+    """
     logging.basicConfig(level=level, format="%(asctime)s %(levelname)s: %(message)s")
 
 
@@ -51,8 +58,15 @@ def setup_logging(level):
     help="Укажите максимальное количество тем-топиков для парсинга (по умолчанию не ограничено)",
 )
 def run(log_level, interval=None, csv=False, excel=False, limit=None, encoding="utf-8"):
-    """
-    Скрипт для парсинга комментариев с сайта.
+    """Запускает скрипт для парсинга комментариев с сайта.
+
+    Args:
+        log_level (str): Уровень логирования.
+        interval (int, optional): Интервал в секундах для автоматического парсинга. Defaults to None.
+        csv (bool, optional): Сохранять данные в CSV-файл. Defaults to False.
+        excel (bool, optional): Сохранять данные в Excel-файл. Defaults to False.
+        limit (int, optional): Максимальное количество тем-топиков для парсинга. Defaults to None.
+        encoding (str, optional): Кодировка для сохранения в CSV и Excel. Defaults to "utf-8".
     """
     setup_logging(log_level)
     excel_file = None
