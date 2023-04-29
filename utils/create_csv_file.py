@@ -6,13 +6,13 @@ DOWNLOADS_DIR = "downloads"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf-8", filename_prefix="data"):
+def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8", filename_prefix="data"):
     """
     Функция создает новый CSV-файл с заданными параметрами.
 
     Аргументы:
      - filename: str (default=None) - название файла. Если None, то имя файла генерируется автоматически.
-     - header_row: bool (default=True) - нужно ли записывать заголовок в файл.
+     - headers: list (default=None) - список заголовков. Если None, то заголовок не записывается в файл.
      - delimiter: str (default=',') - разделитель, который будет использоваться в CSV-файле.
      - encoding: str (default='utf-8') - кодировка файла.
      - filename_prefix: str (default='data') - префикс для названия файла.
@@ -31,11 +31,9 @@ def create_csv_file(filename=None, header_row=True, delimiter=",", encoding="utf
 
     try:
         with open(file_pathname, "w", newline="", encoding=encoding) as file:
-            if header_row:
+            if headers:
                 writer = csv.writer(file, delimiter=delimiter)
-                writer.writerow(
-                    ["Тема", "Лайки", "Просмотры", "Комментарий", "Пользователь", "Лайки комментария", "Дата"]
-                )
+                writer.writerow(headers)
     except OSError as e:
         raise OSError(f"Ошибка при создании файла: {e}")
 
