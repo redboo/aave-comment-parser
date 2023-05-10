@@ -10,7 +10,7 @@ from parsing import parse_topics_and_comments
 from utils import convert_csv_to_excel, create_csv_file, plural
 
 
-def setup_logging(level) -> None:
+def setup_logging(level: str) -> None:
     """Настройка логирования.
 
     Args:
@@ -27,8 +27,6 @@ def setup_logging(level) -> None:
     help="Установите интервал в секундах для автоматического парсинга (по умолчанию не установлен)",
 )
 @click.option(
-    "--log-level",
-    "--logging",
     "--log",
     default="WARNING",
     type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]),
@@ -47,17 +45,18 @@ def setup_logging(level) -> None:
     help="Укажите этот параметр, чтобы сохранить данные в Excel-файл (по умолчанию: не сохранять)",
 )
 @click.option(
-    "--encoding",
-    default="utf-8",
-    help="Укажите кодировку для сохранения в CSV и Excel (по умолчанию: utf-8)",
-)
-@click.option(
     "--limit",
     default=None,
     type=int,
     help="Укажите максимальное количество тем-топиков для парсинга (по умолчанию не ограничено)",
 )
-def run(log_level, interval=None, csv=False, excel=False, limit=None, encoding="utf-8"):
+def run(
+    log: str,
+    interval: int | None = None,
+    csv: bool = False,
+    excel: bool = False,
+    limit: int | None = None,
+) -> None:
     """Запускает скрипт для парсинга комментариев с сайта.
 
     Args:
@@ -66,23 +65,22 @@ def run(log_level, interval=None, csv=False, excel=False, limit=None, encoding="
         csv (bool, optional): Сохранять данные в CSV-файл. Defaults to False.
         excel (bool, optional): Сохранять данные в Excel-файл. Defaults to False.
         limit (int, optional): Максимальное количество тем-топиков для парсинга. Defaults to None.
-        encoding (str, optional): Кодировка для сохранения в CSV и Excel. Defaults to "utf-8".
     """
-    setup_logging(log_level)
+    setup_logging(log)
     excel_file = None
 
     while True:
         csv_file = create_csv_file(
-            filename_prefix="aave-comments",
-            headers=["Тема", "Лайки", "Просмотры", "Комментарий", "Пользователь", "Лайки комментария", "Дата"],
+            filename_suffix="aave-comments",
+            headers=["Topic", "Likes", "Views", "Comment", "User", "Comment likes", "Date"],
         )
         start_time = time.monotonic()
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Парсинг запущен...")
         num_comments = parse_topics_and_comments(csv_file, limit=limit)
 
-        if excel or csv or encoding != "utf-8":
+        if excel or csv:
             excel_file = csv_file[:-3] + "xlsx"
-            csv_file, excel_file = convert_csv_to_excel(csv_file, encoding=encoding, output_csv=csv, output_excel=excel)
+            csv_file, excel_file = convert_csv_to_excel(csv_file, output_csv=csv, output_excel=excel)
 
         print(
             f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Парсинг завершен. "

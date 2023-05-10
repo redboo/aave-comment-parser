@@ -3,10 +3,9 @@ import os
 from datetime import datetime
 
 DOWNLOADS_DIR = "downloads"
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8", filename_prefix="data"):
+def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8", filename_suffix="aave"):
     """
     Функция создает новый CSV-файл с заданными параметрами.
 
@@ -23,11 +22,11 @@ def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8"
     - OSError: при ошибке создания директории или файла.
     """
     if filename is None:
-        filename = f"{filename_prefix}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
+        filename = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{filename_suffix}.csv"
 
     os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
-    file_pathname = os.path.join(BASE_DIR, DOWNLOADS_DIR, filename)
+    file_pathname = f"{DOWNLOADS_DIR}/{filename}"
 
     try:
         with open(file_pathname, "w", newline="", encoding=encoding) as file:
@@ -37,4 +36,4 @@ def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8"
     except OSError as e:
         raise OSError(f"Ошибка при создании файла: {e}")
 
-    return file_pathname
+    return os.path.abspath(filename)
