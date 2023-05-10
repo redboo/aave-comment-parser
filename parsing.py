@@ -7,7 +7,7 @@ from topics_parser import parse_topics
 from utils import plural
 
 
-def parse_topics_and_comments(csv_file, limit=None):
+def parse_topics_and_comments(csv_file: str, limit: int | None = None) -> int:
     num_comments = 0
 
     try:
