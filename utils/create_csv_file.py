@@ -36,4 +36,4 @@ def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8"
     except OSError as e:
         raise OSError(f"Ошибка при создании файла: {e}")
 
-    return os.path.abspath(filename)
+    return os.path.abspath(file_pathname)
