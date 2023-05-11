@@ -7,7 +7,7 @@ from topics_parser import parse_topics
 from utils import plural
 
 
-def parse_topics_and_comments(csv_file: str, limit: int | None = None) -> int:
+def parse_topics_and_comments(csv_file: str, limit: int = 0) -> int:
     num_comments = 0
 
     try:
@@ -34,6 +34,6 @@ def parse_topics_and_comments(csv_file: str, limit: int | None = None) -> int:
                 f"Собрано {plural(num, ['комментарий', 'комментария', 'комментариев'])} для темы: {topic['title']}"
             )
     except Exception:
-        logging.error("Не удалось получить список тем-топиков")
+        logging.error("Не удалось получить список тем-топиков", exc_info=True)
 
     return num_comments

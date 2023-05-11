@@ -16,7 +16,7 @@ def setup_logging(level: str) -> None:
     Args:
         level (str): Уровень логирования.
     """
-    logging.basicConfig(level=level, format="%(asctime)s %(levelname)s: %(message)s")
+    logging.basicConfig(level=level, format="%(asctime)s %(levelname)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
 
 @click.command()
@@ -46,16 +46,16 @@ def setup_logging(level: str) -> None:
 )
 @click.option(
     "--limit",
-    default=None,
+    default=0,
     type=int,
     help="Укажите максимальное количество тем-топиков для парсинга (по умолчанию не ограничено)",
 )
 def run(
     log: str,
-    interval: int | None = None,
+    interval: int = 0,
     csv: bool = False,
     excel: bool = False,
-    limit: int | None = None,
+    limit: int = 0,
 ) -> None:
     """Запускает скрипт для парсинга комментариев с сайта.
 
@@ -70,11 +70,11 @@ def run(
     excel_file = None
 
     while True:
+        start_time = time.monotonic()
         csv_file = create_csv_file(
             filename_suffix="aave-comments",
             headers=["Topic", "Likes", "Views", "Comment", "User", "Comment likes", "Date"],
         )
-        start_time = time.monotonic()
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Парсинг запущен...")
         num_comments = parse_topics_and_comments(csv_file, limit=limit)
 
@@ -88,13 +88,10 @@ def run(
             f"cохранено в: {excel_file or csv_file}"
         )
 
-        if interval:
-            elapsed_time = time.monotonic() - start_time
-            elapsed_time = elapsed_time if elapsed_time >= 0 else 0
-            if (sleep_length := interval - elapsed_time) > 0:
-                time.sleep(sleep_length)
-        else:
+        if not interval:
             break
+
+        time.sleep(max(interval - max(time.monotonic() - start_time, 0), 0))
 
 
 if __name__ == "__main__":

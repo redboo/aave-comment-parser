@@ -5,35 +5,33 @@ from datetime import datetime
 DOWNLOADS_DIR = "downloads"
 
 
-def create_csv_file(filename=None, headers=None, delimiter=",", encoding="utf-8", filename_suffix="aave"):
+def create_csv_file(filename_suffix: str = "aave", filename: str = "", headers: list = [], delimiter: str = ",") -> str:
     """
-    Функция создает новый CSV-файл с заданными параметрами.
+    Функция создает новый CSV-файл с заданными параметрами и возвращает путь к созданному файлу.
 
     Аргументы:
-     - filename: str (default=None) - название файла. Если None, то имя файла генерируется автоматически.
-     - headers: list (default=None) - список заголовков. Если None, то заголовок не записывается в файл.
-     - delimiter: str (default=',') - разделитель, который будет использоваться в CSV-файле.
-     - encoding: str (default='utf-8') - кодировка файла.
-     - filename_prefix: str (default='data') - префикс для названия файла.
+     - `filename_suffix`: `str` (по умолчанию "aave") - суффикс для названия файла.
+     - `filename`: `str` (по умолчанию "") - название файла. Если не указано, то имя файла генерируется автоматически.
+     - `headers`: `list` (по умолчанию []) - список заголовков. Если не указан, то заголовок не записывается в файл.
+     - `delimiter`: `str` (по умолчанию ",") - разделитель, который будет использоваться в CSV-файле.
 
     Возвращает путь к созданному файлу.
 
     Исключения:
-    - OSError: при ошибке создания директории или файла.
+    - `OSError`: при ошибке создания директории или файла.
     """
-    if filename is None:
+    if not filename:
         filename = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{filename_suffix}.csv"
 
     os.makedirs(DOWNLOADS_DIR, exist_ok=True)
-
-    file_pathname = f"{DOWNLOADS_DIR}/{filename}"
+    file_path = os.path.join(DOWNLOADS_DIR, filename)
 
     try:
-        with open(file_pathname, "w", newline="", encoding=encoding) as file:
+        with open(file_path, "w", newline="") as file:
             if headers:
                 writer = csv.writer(file, delimiter=delimiter)
                 writer.writerow(headers)
     except OSError as e:
         raise OSError(f"Ошибка при создании файла: {e}")
 
-    return os.path.abspath(file_pathname)
+    return os.path.abspath(file_path)

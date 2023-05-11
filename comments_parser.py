@@ -21,7 +21,7 @@ def process_comment(comment):
         raise ValueError(f"Произошла ошибка при обработке комментария: {e}")
 
 
-def parse_comments(topic, csv_file):
+def parse_comments(topic, csv_file: str) -> int:
     """Собирает комментарии со страницы и сохраняет их в CSV-файл."""
     num_comments = 0
     url = f"https://governance.aave.com/t/{topic['slug']}"
