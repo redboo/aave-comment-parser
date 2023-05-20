@@ -25,13 +25,12 @@ def parse_topics(limit: int = 0) -> list[dict]:
             response = session.get(url, params=params, headers=headers, timeout=20)
             response.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 429:
-                logging.warning("Слишком много запросов, ожидание 5 секунд")
-                time.sleep(5)
-                continue
-            else:
+            if e.response.status_code != 429:
                 raise
 
+            logging.warning("Слишком много запросов, ожидание 5 секунд")
+            time.sleep(5)
+            continue
         data = response.json()
         if not data["topic_list"]["topics"]:
             break
