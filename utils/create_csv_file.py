@@ -5,7 +5,9 @@ from datetime import datetime
 DOWNLOADS_DIR = "downloads"
 
 
-def create_csv_file(filename_suffix: str = "aave", filename: str = "", headers: list = [], delimiter: str = ",") -> str:
+def create_csv_file(
+    filename_suffix: str = "aave", filename: str = "", headers: list[str] | None = None, delimiter: str = ","
+) -> str:
     """
     Функция создает новый CSV-файл с заданными параметрами и возвращает путь к созданному файлу.
 
