@@ -79,7 +79,7 @@ def run(
         num_comments = parse_topics_and_comments(csv_file, limit=limit)
 
         if excel or csv:
-            excel_file = csv_file[:-3] + "xlsx"
+            excel_file = f"{csv_file[:-3]}xlsx"
             csv_file, excel_file = convert_csv_to_excel(csv_file, output_csv=csv, output_excel=excel)
 
         print(
